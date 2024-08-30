@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("TCP Server 1");
@@ -15,6 +16,13 @@ while (true)
     IPEndPoint clientEndPoint = socket.Client.RemoteEndPoint as IPEndPoint;
     Console.WriteLine("Client connected: " + clientEndPoint.Address);
 
+    Task.Run(() => HandleClient(socket));
+}
+
+listener.Stop();
+
+void HandleClient(TcpClient socket)
+{
     NetworkStream ns = socket.GetStream();
     StreamReader reader = new StreamReader(ns);
     StreamWriter writer = new StreamWriter(ns);
@@ -32,6 +40,3 @@ while (true)
         }
     }
 }
-
-listener.Stop();
-
